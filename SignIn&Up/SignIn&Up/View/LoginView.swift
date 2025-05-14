@@ -75,7 +75,7 @@ extension LoginView {
         
         welcomeLabel.textAlignment = .center
         welcomeLabel.numberOfLines = 2
-        welcomeLabel.text = "\(manager.getCurrentUser())\n 환영합니다!"
+        welcomeLabel.text = "\(manager.getCurrentUser())님!\n 환영합니다!"
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),

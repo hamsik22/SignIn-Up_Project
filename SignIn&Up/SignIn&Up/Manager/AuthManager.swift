@@ -18,10 +18,11 @@ class AuthManager {
         return appDelegate.persistentContainer.viewContext
     }
     
-    var isValidationSucceeded: Bool = false {
-        didSet { validationStatusChanged?(isValidationSucceeded)}
+    var validations: (Bool, Bool, Bool, Bool) = (false, false, false, false) {
+        didSet { validationStatusChanged?(validations.0, validations.1, validations.2, validations.3)}
     }
-    var validationStatusChanged: ((Bool) -> Void)?
+    var validationStatusChanged: ((Bool, Bool, Bool, Bool) -> Void)?
+    
 
     
     // MARK: 이메일 유효성 확인
@@ -30,29 +31,35 @@ class AuthManager {
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         
         if emailPredicate.evaluate(with: email) {
+            validations.0 = true
             return (true, "사용가능한 이메일입니다!")
         } else {
             // 조건별 에러 메시지
             if !email.contains("@") {
+                validations.0 = false
                 return (false, "이메일 형식이 올바르지 않습니다.")
             }
             
             let components = email.split(separator: "@")
             guard let localPart = components.first else {
+                validations.0 = false
                 return (false, "이메일 형식이 올바르지 않습니다.")
             }
             
             if localPart.count < 6 || localPart.count > 20 {
-                return (false, "이메일의 아이디 부분은 최소 6자 이상, 최대 20자 이하여야 합니다.")
+                validations.0 = false
+                return (false, "이메일의 아이디는 최소 6자 이상, 최대 20자 이하여야 합니다.")
             }
             
             let localRegex = "^[a-z][a-z0-9]{5,19}$"
             let localPredicate = NSPredicate(format: "SELF MATCHES %@", localRegex)
             
             if !localPredicate.evaluate(with: String(localPart)) {
+                validations.0 = false
                 return (false, "이메일의 아이디 부분은 영문 소문자(a-z)로 시작해야 하며, 숫자로 시작할 수 없습니다.")
             }
             
+            validations.0 = false
             return (false, "이메일 형식이 올바르지 않습니다.")
         }
     }
@@ -60,6 +67,7 @@ class AuthManager {
     // MARK: 비밀번호 유효성 검사
     func validatePassword(_ password: String) -> (Bool, String) {
         guard password.count >= 8 else {
+            validations.1 = false
             return (false, "비밀번호는 최소 8자 이상이어야 합니다.")
         }
         
@@ -67,8 +75,10 @@ class AuthManager {
         let passwordPredicate = NSPredicate(format: "SELF MATCHES %@", passwordRegex)
         
         if passwordPredicate.evaluate(with: password) {
+            validations.1 = true
             return (true, "사용 가능한 비밀번호입니다!")
         } else {
+            validations.1 = false
             return (false, "비밀번호는 영문 대소문자, 숫자, 특수문자를 포함해야 합니다.")
         }
     }
@@ -76,10 +86,18 @@ class AuthManager {
     // MARK: 비밀번호 확인 유효성 검사
     func checkConfirmPassword(_ password: String, _ confirmPassword: String) -> (Bool, String) {
         let isValid = password == confirmPassword
-        isValidationSucceeded = isValid
+        validations.2 = isValid
         return (isValid, isValid ? "비밀번호가 일치합니다!" : "비밀번호가 일치하지 않습니다.")
     }
-
+    
+    // MARK: 닉네임 입력 확인
+    func checkNickname(_ nickname: String) {
+        if !nickname.isEmpty {
+            validations.3 = true
+        } else {
+            validations.3 = false
+        }
+    }
 }
 
 // MARK: - CoreData Methods
@@ -97,7 +115,7 @@ extension AuthManager {
         newUser.setValue(email, forKey: "email")
         newUser.setValue(password, forKey: "password")
         newUser.setValue(true, forKey: "isLoggedIn")
-        newUser.setValue("", forKey: "nickname")
+        newUser.setValue(nickname, forKey: "nickname")
         
         do {
             try context.save()
@@ -161,7 +179,7 @@ extension AuthManager {
         
         do {
             let results = try context.fetch(request)
-            return results.first?.value(forKey: "email") as! String
+            return results.first?.value(forKey: "nickname") as! String
         } catch {
             print("이메일 중복 확인 중 오류 발생: \(error.localizedDescription)")
         }

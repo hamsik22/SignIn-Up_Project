@@ -29,6 +29,7 @@ class SignUpView: UIView, UITextFieldDelegate {
         label.text = "이메일을 입력해주세요"
         label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.textColor = .systemGray
+        label.numberOfLines = 2
         return label
     }()
     private var emailTextField: UITextField = {
@@ -113,6 +114,7 @@ class SignUpView: UIView, UITextFieldDelegate {
         emailTextField.delegate = self
         passwordTextField.delegate = self
         confirmPasswordTextField.delegate = self
+        nicknameTextField.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -200,9 +202,9 @@ extension SignUpView {
         self.addGestureRecognizer(tapGesture)
         
         /// SignUpButton Appearance
-        signUpButton.isEnabled = manager.isValidationSucceeded
-        manager.validationStatusChanged = { [weak self] isValid in
-            self?.signUpButton.isEnabled = isValid
+        signUpButton.isEnabled = false
+        manager.validationStatusChanged = { [weak self] (email, password, confirm, nickname) in
+            self?.signUpButton.isEnabled = (email && password && confirm && nickname)
         }
     }
 }
@@ -217,7 +219,8 @@ extension SignUpView {
     
     /// SignUp 버튼 터치 시 동작
     @objc func signUpButtonTapped() {
-        if manager.isValidationSucceeded {
+        let vaildation = manager.validations
+        if vaildation.0 && vaildation.1 && vaildation.2 {
             guard let emailText = emailTextField.text,
                   let passwordText = passwordTextField.text,
                   let nicknameText = nicknameTextField.text else { return }
@@ -233,25 +236,26 @@ extension SignUpView {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let currentText = textField.text as NSString? else { return true }
         let updatedText = currentText.replacingCharacters(in: range, with: string)
-        var validations: (Bool, Bool, Bool) = (false, false, false)
         
         if textField == emailTextField {
             let validation = manager.validateEmail(updatedText)
             updateTextFieldAppearance(textField, isValid: validation.0)
             updateSubHeaderAppearance(emailSubHeader, isValid: validation.0, errorMessage: validation.1)
-            validations.0 = validation.0
         } else if textField == passwordTextField {
             let validation = manager.validatePassword(updatedText)
             updateTextFieldAppearance(textField, isValid: validation.0)
             updateSubHeaderAppearance(passwordSubHeader, isValid: validation.0, errorMessage: validation.1)
-            validations.1 = validation.0
         } else if textField == confirmPasswordTextField {
             if let passwordText = passwordTextField.text {
                 let validation = manager.checkConfirmPassword(passwordText, updatedText)
                 updateTextFieldAppearance(textField, isValid: validation.0)
                 updateSubHeaderAppearance(confirmPasswordSubHeader, isValid: validation.0, errorMessage: validation.1)
-                validations.2 = validation.0
-                if validations.0 && validations.1 && validations.2 { manager.isValidationSucceeded = true }
+            }
+        } else if textField == nicknameTextField {
+            if nicknameTextField.text?.count ?? 0 >= 2 {
+                manager.validations.3 = true
+            } else {
+                manager.validations.3 = false
             }
         }
         
