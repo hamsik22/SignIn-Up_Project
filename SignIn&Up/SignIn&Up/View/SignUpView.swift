@@ -144,6 +144,7 @@ extension SignUpView {
         self.addGestureRecognizer(tapGesture)
         
         /// SignUpButton Appearance
+        signUpButton.isEnabled = manager.isValidationSucceeded
         manager.validationStatusChanged = { [weak self] isValid in
             self?.signUpButton.isEnabled = isValid
         }
