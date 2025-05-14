@@ -41,7 +41,7 @@ extension StartViewController {
 // MARK: AuthManagable
 extension StartViewController: AuthManagable {
     
-    func didSignUpSuccess(email: String, password: String) {
+    func didSignUpSuccess() {
         let vc = LoginViewController()
         vc.delegate = self
         dismiss(animated: true)

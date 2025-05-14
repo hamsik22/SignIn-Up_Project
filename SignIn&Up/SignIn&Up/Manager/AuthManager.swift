@@ -26,12 +26,33 @@ class AuthManager {
     
     // MARK: 이메일 유효성 확인
     func validateEmail(_ email: String) -> (Bool, String) {
-        let emailRegex = "^[a-zA-Z0-9]+@[a-zA-Z]+\\.[a-zA-Z]{2,}$"
+        let emailRegex = "^[a-z][a-z0-9]{5,19}@[a-zA-Z]+\\.[a-zA-Z]{2,}$"
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         
         if emailPredicate.evaluate(with: email) {
-            return (true, "")
+            return (true, "사용가능한 이메일입니다!")
         } else {
+            // 조건별 에러 메시지
+            if !email.contains("@") {
+                return (false, "이메일 형식이 올바르지 않습니다.")
+            }
+            
+            let components = email.split(separator: "@")
+            guard let localPart = components.first else {
+                return (false, "이메일 형식이 올바르지 않습니다.")
+            }
+            
+            if localPart.count < 6 || localPart.count > 20 {
+                return (false, "이메일의 아이디 부분은 최소 6자 이상, 최대 20자 이하여야 합니다.")
+            }
+            
+            let localRegex = "^[a-z][a-z0-9]{5,19}$"
+            let localPredicate = NSPredicate(format: "SELF MATCHES %@", localRegex)
+            
+            if !localPredicate.evaluate(with: String(localPart)) {
+                return (false, "이메일의 아이디 부분은 영문 소문자(a-z)로 시작해야 하며, 숫자로 시작할 수 없습니다.")
+            }
+            
             return (false, "이메일 형식이 올바르지 않습니다.")
         }
     }
@@ -65,12 +86,18 @@ class AuthManager {
 extension AuthManager {
     
     // MARK: 회원가입
-    func signUp(email: String, password: String) -> Bool {
+    func signUp(email: String, password: String, nickname: String) -> Bool {
+        if isEmailDuplicated(email: email) {
+            debugPrint("\(email): 이미 존재하는 이메일입니다.")
+            return false
+        }
+
         let newUser = NSEntityDescription.insertNewObject(forEntityName: "User", into: context)
         newUser.setValue(UUID().uuidString, forKey: "id")
         newUser.setValue(email, forKey: "email")
         newUser.setValue(password, forKey: "password")
         newUser.setValue(true, forKey: "isLoggedIn")
+        newUser.setValue("", forKey: "nickname")
         
         do {
             try context.save()
@@ -78,8 +105,8 @@ extension AuthManager {
             return true
         } catch {
             print("\(error.localizedDescription): 회원가입 실패")
+            return false
         }
-        return false
     }
     
     // MARK: 이메일 중복 확인

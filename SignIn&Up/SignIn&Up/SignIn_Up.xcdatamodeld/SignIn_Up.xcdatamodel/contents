@@ -4,6 +4,7 @@
         <attribute name="email" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="isLoggedIn" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="nickname" optional="YES" attributeType="String"/>
         <attribute name="password" optional="YES" attributeType="String"/>
     </entity>
 </model>
