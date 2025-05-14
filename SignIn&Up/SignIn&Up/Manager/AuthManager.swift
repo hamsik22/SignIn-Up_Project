@@ -13,12 +13,12 @@ class AuthManager {
     static let shared = AuthManager()
     private init() { }
     
-    weak var delegate: AuthManagable?
-    
     private var context: NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }
+    
+    var isUserLoggedIn: Bool { return false }
     
     // MARK: 회원가입
     func signUp() { }

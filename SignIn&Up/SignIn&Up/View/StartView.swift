@@ -9,11 +9,16 @@ import UIKit
 
 class StartView: UIView {
     
+    weak var delegate: AuthManagable?
+    
+    private let manager: AuthManager = .shared
+    
     private var welcomeText: UILabel = {
         let label = UILabel()
         label.text = "Welcome to\nSignIn&Up"
         label.font = .systemFont(ofSize: 15, weight: .bold)
         label.numberOfLines = 2
+        label.textAlignment = .center
         label.textColor = .purple
         label.lineBreakMode = .byWordWrapping
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -33,6 +38,7 @@ class StartView: UIView {
         super.init(frame: frame)
         addSubViews()
         setupUI()
+        addAction()
     }
     
     required init?(coder: NSCoder) {
@@ -50,12 +56,28 @@ class StartView: UIView {
             welcomeText.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             welcomeText.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             welcomeText.widthAnchor.constraint(equalToConstant: 200),
-            welcomeText.heightAnchor.constraint(equalToConstant: 50),
+            welcomeText.heightAnchor.constraint(equalToConstant: 100),
             
             startButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             startButton.topAnchor.constraint(equalTo: welcomeText.bottomAnchor, constant: 20),
             startButton.widthAnchor.constraint(equalToConstant: 100),
             startButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+    }
+    
+    private func addAction() {
+        startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
+    }
+}
+
+extension StartView {
+    
+    @objc func startButtonTapped() {
+        print("StartButton Tapped")
+        if manager.isUserLoggedIn {
+            delegate?.didLoginSuccess()
+        } else {
+            delegate?.didLoginFailure("로그인 실패")
+        }
     }
 }

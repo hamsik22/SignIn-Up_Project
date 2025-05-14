@@ -9,12 +9,12 @@ import UIKit
 
 class StartViewController: UIViewController {
     
-    private var startView: StartView!
+    private var startView = StartView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        startView = StartView()
         view.addSubview(startView)
+        startView.delegate = self
         setupUI()
     }
     
@@ -25,8 +25,8 @@ class StartViewController: UIViewController {
         NSLayoutConstraint.activate([
             startView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             startView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            startView.widthAnchor.constraint(equalToConstant: 200),
-            startView.heightAnchor.constraint(equalToConstant: 100)
+            startView.widthAnchor.constraint(equalToConstant: 300),
+            startView.heightAnchor.constraint(equalToConstant: 300)
         ])
     }
 }
@@ -46,7 +46,9 @@ extension StartViewController: AuthManagable {
     }
     
     func didLoginFailure(_ error: String) {
-        // TODO: 로그인 실패 문구 출력
+        // TODO: 로그인 실패 문구 출력 후 회원가입 화면으로 이동
+        print("\(error) : 회원가입 화면으로 이동합니다")
+        
     }
     
     func didLogout() {
