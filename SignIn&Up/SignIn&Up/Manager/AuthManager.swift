@@ -10,6 +10,9 @@ import UIKit
 
 class AuthManager {
     
+    static let shared = AuthManager()
+    private init() { }
+    
     weak var delegate: AuthManagable?
     
     private var context: NSManagedObjectContext {
@@ -19,6 +22,9 @@ class AuthManager {
     
     // MARK: 회원가입
     func signUp() { }
+    
+    // MARK: 이메일 유효성 확인
+    func validateEmail(_ email: String) -> Bool { return true }
     
     // MARK: 이메일 중복 확인
     func isEmailDuplicated() -> Bool { return false }
