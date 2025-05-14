@@ -83,13 +83,27 @@ class SignUpView: UIView, UITextFieldDelegate {
         textField.isSecureTextEntry = true
         return textField
     }()
+    private var nicknameHeader: UILabel = {
+        let label = UILabel()
+        label.text = "닉네임"
+        label.font = UIFont.systemFont(ofSize: 24, weight: .medium)
+        return label
+    }()
+    private var nicknameTextField: UITextField = {
+        let textField = UITextField()
+        textField.borderStyle = .roundedRect
+        textField.autocorrectionType = .no
+        textField.autocapitalizationType = .none
+        return textField
+    }()
     private var signUpButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Sign Up", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         return button
     }()
-    private var stackView = UIStackView()
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -113,6 +127,7 @@ extension SignUpView {
                         emailHeader,emailTextField,emailSubHeader,
                         passwordHeader,passwordTextField,passwordSubHeader,
                         confirmPasswordHeader,confirmPasswordTextField,confirmPasswordSubHeader,
+                        nicknameHeader, nicknameTextField,
                         signUpButton]
         
         subViews.forEach {
@@ -162,7 +177,15 @@ extension SignUpView {
             confirmPasswordSubHeader.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
             confirmPasswordSubHeader.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
             
-            signUpButton.topAnchor.constraint(equalTo: confirmPasswordTextField.bottomAnchor, constant: 50),
+            nicknameHeader.topAnchor.constraint(equalTo: confirmPasswordSubHeader.bottomAnchor, constant: 24),
+            nicknameHeader.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
+            nicknameHeader.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
+            
+            nicknameTextField.topAnchor.constraint(equalTo: nicknameHeader.bottomAnchor, constant: 8),
+            nicknameTextField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
+            nicknameTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
+            
+            signUpButton.topAnchor.constraint(equalTo: nicknameTextField.bottomAnchor, constant: 50),
             signUpButton.heightAnchor.constraint(equalToConstant: 50),
             signUpButton.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
@@ -196,9 +219,10 @@ extension SignUpView {
     @objc func signUpButtonTapped() {
         if manager.isValidationSucceeded {
             guard let emailText = emailTextField.text,
-                  let passwordText = passwordTextField.text else { return }
-            if manager.signUp(email: emailText, password: passwordText) {
-                delegate?.didSignUpSuccess(email: emailText, password: passwordText)
+                  let passwordText = passwordTextField.text,
+                  let nicknameText = nicknameTextField.text else { return }
+            if manager.signUp(email: emailText, password: passwordText, nickname: nicknameText) {
+                delegate?.didSignUpSuccess()
             } else {
                 delegate?.didSignUpFailure("회원가입 실패")
             }
