@@ -9,7 +9,7 @@ import UIKit
 
 class SignUpView: UIView {
     
-    weak var deligate: AuthManagable?
+    weak var delegate: AuthManagable?
     private let manager: AuthManager = .shared
     
     private var headTitle: UILabel = {
@@ -112,7 +112,7 @@ class SignUpView: UIView {
         ])
     }
     private func addActions() {
-        
+        signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder) {
@@ -124,9 +124,9 @@ extension SignUpView {
     
     @objc func signUpButtonTapped() {
         if manager.validateEmail("") {
-            deligate?.didSignUpSuccess()
+            delegate?.didSignUpSuccess()
         } else {
-            deligate?.didSignUpFailure("회원가입 실패")
+            delegate?.didSignUpFailure("회원가입 실패")
         }
     }
 }
