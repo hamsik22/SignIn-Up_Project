@@ -11,6 +11,8 @@ class StartViewController: UIViewController {
     
     private var startView = StartView()
     
+    private var manager: AuthManager = .shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(startView)
@@ -33,8 +35,9 @@ class StartViewController: UIViewController {
 
 // MARK: AuthManagable
 extension StartViewController: AuthManagable {
-    func didSignUpSuccess() {
+    func didSignUpSuccess(email: String, password: String) {
         // TODO: 로그인 화면으로 이동
+        manager.signUp(email: email, password: password)
         dismiss(animated: true)
         present(LoginViewController(), animated: true)
     }

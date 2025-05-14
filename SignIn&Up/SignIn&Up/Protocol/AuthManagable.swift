@@ -14,7 +14,7 @@ protocol AuthManagable: AnyObject {
     func didLoginFailure(_ error: String)
     
     // MARK: 회원가입 관련
-    func didSignUpSuccess()
+    func didSignUpSuccess(email: String, password: String)
     func didSignUpFailure(_ error: String)
     
     // MARK: 로그아웃 관련
