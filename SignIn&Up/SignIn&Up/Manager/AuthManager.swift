@@ -18,19 +18,13 @@ class AuthManager {
         return appDelegate.persistentContainer.viewContext
     }
     
-    var isUserLoggedIn: Bool { return false }
-    
     var isValidationSucceeded: Bool = false {
         didSet {
             validationStatusChanged?(isValidationSucceeded)
         }
     }
     var validationStatusChanged: ((Bool) -> Void)?
-    
-    // MARK: 회원가입
-    func signUp(email: String, password: String) {
-        
-    }
+
     
     // MARK: 이메일 유효성 확인
     func validateEmail(_ email: String) -> (Bool, String) {
@@ -43,9 +37,6 @@ class AuthManager {
             return (false, "이메일 형식이 올바르지 않습니다.")
         }
     }
-    
-    // MARK: 이메일 중복 확인
-    func isEmailDuplicated() -> Bool { return false }
     
     // MARK: 비밀번호 유효성 검사
     func validatePassword(_ password: String) -> (Bool, String) {
@@ -63,6 +54,7 @@ class AuthManager {
         }
     }
     
+    // MARK: 비밀번호 확인 유효성 검사
     func checkConfirmPassword(_ password: String, _ confirmPassword: String) -> (Bool, String) {
         let isValid = password == confirmPassword
         isValidationSucceeded = isValid
@@ -72,15 +64,98 @@ class AuthManager {
     // MARK: 로그인
     func login() { }
     
-    // MARK: 로그아웃
-    func logOut() { }
+    // MARK: 현재 로그인된 사용자 정보 가져오기
+    func getCurrentUser() -> String {
+        let request = NSFetchRequest<NSManagedObject>(entityName: "User")
+        
+        do {
+            let results = try context.fetch(request)
+            return results.first?.value(forKey: "email") as! String
+        } catch {
+            print("이메일 중복 확인 중 오류 발생: \(error.localizedDescription)")
+        }
+        return ""
+    }
+}
+
+// MARK: - CoreData Methods
+extension AuthManager {
     
-    // MARK: 계정 삭제
-    func deleteAccount() { }
+    // MARK: 회원가입
+    func signUp(email: String, password: String) -> Bool {
+        let newUser = NSEntityDescription.insertNewObject(forEntityName: "User", into: context)
+        newUser.setValue(UUID().uuidString, forKey: "id")
+        newUser.setValue(email, forKey: "email")
+        newUser.setValue(password, forKey: "password")
+        newUser.setValue(true, forKey: "isLoggedIn")
+        
+        do {
+            try context.save()
+            debugPrint("\(email): 회원가입 성공")
+            return true
+        } catch {
+            print("\(error.localizedDescription): 회원가입 실패")
+        }
+        return false
+    }
+    
+    // MARK: 이메일 중복 확인
+    func isEmailDuplicated(email: String) -> Bool {
+        let request = NSFetchRequest<NSManagedObject>(entityName: "User")
+        request.predicate = NSPredicate(format: "email == %@", email)
+        
+        do {
+            let results = try context.fetch(request)
+            return !results.isEmpty
+        } catch {
+            print("이메일 중복 확인 중 오류 발생: \(error.localizedDescription)")
+            return false
+        }
+    }
     
     // MARK: 로그인 상태 확인
-    func isLoggedIn() { }
+    func isLoggedIn() -> Bool {
+        let request = NSFetchRequest<NSManagedObject>(entityName: "User")
+        request.predicate = NSPredicate(format: "isLoggedIn == true")
+        
+        do {
+            let result = try context.fetch(request)
+            return !result.isEmpty
+        } catch {
+            print("로그인 상태 확인 중 오류 발생: \(error.localizedDescription)")
+            return false
+        }
+    }
     
-    // MARK: 현재 로그인된 사용자 정보 가져오기
-    func getCurrentUser() { }
+//    // MARK: 로그아웃
+//    func logOut() {
+//        let request = NSFetchRequest<NSManagedObject>(entityName: "User")
+//        
+//        do {
+//            let user = try context.fetch(request).first!
+//            user.setValue(false, forKey: "isLoggedIn")
+//            try context.save()
+//            print("로그아웃 성공")
+//        } catch {
+//            print("\(error.localizedDescription): 로그아웃 실패")
+//        }
+//    }
+    
+    // MARK: 계정 삭제
+    func deleteAccount() -> Bool {
+        let request = NSFetchRequest<NSManagedObject>(entityName: "User")
+        
+        do {
+            let result = try context.fetch(request)
+            if let user = result.first {
+                context.delete(user)
+                try context.save()
+                print("회원탈퇴 완료")
+                return true
+            }
+        } catch {
+            print("\(error.localizedDescription): 회원탈퇴 실패")
+        }
+        return false
+    }
 }

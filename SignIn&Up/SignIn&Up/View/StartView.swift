@@ -74,7 +74,7 @@ extension StartView {
     
     @objc func startButtonTapped() {
         print("StartButton Tapped")
-        if manager.isUserLoggedIn {
+        if manager.isLoggedIn() {
             delegate?.didLoginSuccess()
         } else {
             delegate?.didLoginFailure("로그인 실패")

@@ -11,6 +11,8 @@ class LoginView: UIView {
     
     weak var delegate: AuthManagable?
     
+    private let manager: AuthManager = .shared
+    
     private var welcomeLabel: UILabel = {
         let label = UILabel()
         label.text = "@@@ 님! \n 환영합니다!"
@@ -73,6 +75,7 @@ extension LoginView {
         
         welcomeLabel.textAlignment = .center
         welcomeLabel.numberOfLines = 2
+        welcomeLabel.text = "\(manager.getCurrentUser())\n 환영합니다!"
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
@@ -89,5 +92,28 @@ extension LoginView {
             signOutButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
-    private func addActions() { }
+    
+    private func addActions() {
+        logOutButton.addTarget(self, action: #selector(logOutTapped), for: .touchUpInside)
+        signOutButton.addTarget(self, action: #selector(signOutTapped), for: .touchUpInside)
+    }
+}
+
+extension LoginView {
+    
+    @objc func logOutTapped() {
+        print("LogOut Tapped")
+        delegate?.didLogout()
+    }
+    
+    @objc func signOutTapped() {
+        print("SignOut Tapped")
+        if manager.deleteAccount() {
+            print("didDeleteAccountSuccess")
+            delegate?.didDeleteAccountSuccess()
+        } else {
+            print("didDeleteAccountFailure")
+            delegate?.didDeleteAccountFailure("회원탈퇴 실패")
+        }
+    }
 }

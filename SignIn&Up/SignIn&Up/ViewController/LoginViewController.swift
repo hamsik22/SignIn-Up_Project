@@ -20,6 +20,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        print("LoginViewController - Delegate: \(String(describing: delegate))")
     }
 }
 

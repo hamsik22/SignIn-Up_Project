@@ -164,9 +164,11 @@ extension SignUpView {
         if manager.isValidationSucceeded {
             guard let emailText = emailTextField.text,
                   let passwordText = passwordTextField.text else { return }
-            delegate?.didSignUpSuccess(email: emailText, password: passwordText)
-        } else {
-            delegate?.didSignUpFailure("회원가입 실패")
+            if manager.signUp(email: emailText, password: passwordText) {
+                delegate?.didSignUpSuccess(email: emailText, password: passwordText)
+            } else {
+                delegate?.didSignUpFailure("회원가입 실패")
+            }
         }
     }
     

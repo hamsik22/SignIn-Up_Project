@@ -18,6 +18,8 @@ class StartViewController: UIViewController {
         view.addSubview(startView)
         startView.delegate = self
         setupUI()
+        print("StartViewController - Delegate: \(String(describing: self))")
+
     }
     
     private func setupUI() {
@@ -35,26 +37,25 @@ class StartViewController: UIViewController {
 
 // MARK: AuthManagable
 extension StartViewController: AuthManagable {
+    
     func didSignUpSuccess(email: String, password: String) {
-        // TODO: 로그인 화면으로 이동
-        manager.signUp(email: email, password: password)
         let vc = LoginViewController()
         vc.delegate = self
         dismiss(animated: true)
-        present(LoginViewController(), animated: true)
+        present(vc, animated: true)
     }
     
     func didSignUpFailure(_ error: String) {
-        // TODO: 회원가입 실패 문구 출력 후 입력값 초기화
+        print(error)
     }
     
     func didLoginSuccess() {
-        // TODO: 로그인 화면으로 이동
-        present(LoginViewController(), animated: true)
+        let vc = LoginViewController()
+        vc.delegate = self
+        present(vc, animated: true)
     }
     
     func didLoginFailure(_ error: String) {
-        // TODO: 로그인 실패 문구 출력 후 회원가입 화면으로 이동
         print("\(error) : 회원가입 화면으로 이동합니다")
         let vc = SignUpViewController()
         vc.delegate = self
@@ -62,17 +63,15 @@ extension StartViewController: AuthManagable {
     }
     
     func didLogout() {
-        // TODO: 시작화면으로 이동
         dismiss(animated: true)
     }
     
     func didDeleteAccountSuccess() {
-        // TODO: 회원정보 삭제 후 시작화면으로 이동
         dismiss(animated: true)
     }
     
     func didDeleteAccountFailure(_ error: String) {
-        // TODO: 회원정보 삭제 실패 문구 출력
+        print(error)
     }
     
 }
