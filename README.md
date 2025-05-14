@@ -1,11 +1,16 @@
 # SignIn-Up_Project
 본 프로젝트는 바로인턴 과제물로써     
-회원가입&로그아웃&회원탈퇴 기능이 들어있는 예제 프로젝트입니다.
+`회원가입` & `로그아웃` & `회원탈퇴` 기능이 들어있는 예제 프로젝트입니다.
 
 사용한 기술은 다음과 같습니다.
 
 - `UIKit`
 - `CoreData`
+
+### 시연 영상
+<div>
+<img width="200" src="https://github.com/user-attachments/assets/871c5626-f125-4ede-9fa9-60e955916bce">
+</div>
 
 ## 주요 기능
 ### 회원가입
@@ -32,3 +37,15 @@
 -	`extension`을 통해 각 기능별로 코드를 분리하여 가독성과 재사용성을 향상시켰습니다.
 -	`UITextFieldDelegate`를 통해 입력값에 따른 유연한 안내 UI를 제공하도록 구현하였습니다.
 -	`NotificationCenter`를 활용해 키보드에 의해 UI가 가려지는 문제를 해결하여 사용자 경험(UX)을 개선하였습니다.
+
+#스크린샷
+
+## 화면
+| StartView  | SignUpView  | LoginView  |
+|---|---|---|
+| <img width="200" src="https://github.com/user-attachments/assets/6b65a256-6e21-4c9b-8c6b-b6a719e5c741">  |  <img width="200" src="https://github.com/user-attachments/assets/7871385e-3ae1-48ac-90f9-afaf6a7e8220">  |  <img width="200" src="https://github.com/user-attachments/assets/6b67e53e-9765-42c0-b54a-92fa05128bed">  |
+
+### 입력값 검증
+| 이메일  | 비밀번호  | 비밀번호 확인  |
+|---|---|---|
+| <img width="200" src="https://github.com/user-attachments/assets/a5238765-f7f3-41f4-ac32-e37fb002ef4e"> | <img width="200" src="https://github.com/user-attachments/assets/0df61d94-59b1-44bd-a7b5-06cd0d33f368"> | <img width="200" src="https://github.com/user-attachments/assets/a0a02e15-babb-420f-a277-7e9558d85ca9"> |
