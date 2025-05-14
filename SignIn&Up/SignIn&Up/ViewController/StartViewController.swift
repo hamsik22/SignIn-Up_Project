@@ -7,59 +7,58 @@
 
 import UIKit
 
-class StartViewController: UIViewController, AuthManagable {
+class StartViewController: UIViewController {
     
-    
-    private var manager = AuthManager()
-    
-    private var welcomeText: UILabel = {
-        let label = UILabel()
-        label.text = "Welcome to\nSignIn&Up"
-        label.font = .systemFont(ofSize: 15, weight: .bold)
-        label.numberOfLines = 2
-        label.textColor = .purple
-        label.lineBreakMode = .byWordWrapping
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private var startButton: UIButton = {
-        let button = UIButton()
-        button.setTitle( "Start", for: .normal)
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 10
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+    private var startView: StartView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addSubViews()
+        startView = StartView()
+        view.addSubview(startView)
         setupUI()
-        
-        manager.delegate = self
-    }
-    
-    private func addSubViews() {
-        [welcomeText, startButton]
-            .forEach { view.addSubview($0) }
     }
     
     private func setupUI() {
-        
         view.backgroundColor = .systemBackground
+        startView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            welcomeText.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            welcomeText.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            welcomeText.widthAnchor.constraint(equalToConstant: 200),
-            welcomeText.heightAnchor.constraint(equalToConstant: 50),
-            
-            startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            startButton.topAnchor.constraint(equalTo: welcomeText.bottomAnchor, constant: 20),
-            startButton.widthAnchor.constraint(equalToConstant: 100),
-            startButton.heightAnchor.constraint(equalToConstant: 50)
+            startView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            startView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            startView.widthAnchor.constraint(equalToConstant: 200),
+            startView.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
 }
 
+// MARK: AuthManagable
+extension StartViewController: AuthManagable {
+    func didSignUpSuccess() {
+        // TODO: 홈 화면으로 이동
+    }
+    
+    func didSignUpFailure(_ error: String) {
+        // TODO: 회원가입 실패 문구 출력
+    }
+    
+    func didLoginSuccess() {
+        // TODO: 홈 화면으로 이동
+    }
+    
+    func didLoginFailure(_ error: String) {
+        // TODO: 로그인 실패 문구 출력
+    }
+    
+    func didLogout() {
+        // TODO: StartView로 이동
+    }
+    
+    func didDeleteAccountSuccess() {
+        // TODO: 회원정보 삭제 후 StartView로 이동
+    }
+    
+    func didDeleteAccountFailure(_ error: String) {
+        // TODO: 회원정보 삭제 실패 문구 출력
+    }
+    
+}
