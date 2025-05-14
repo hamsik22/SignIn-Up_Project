@@ -34,29 +34,33 @@ class StartViewController: UIViewController {
 // MARK: AuthManagable
 extension StartViewController: AuthManagable {
     func didSignUpSuccess() {
-        // TODO: 홈 화면으로 이동
+        // TODO: 로그인 화면으로 이동
+        present(LoginViewController(), animated: true)
     }
     
     func didSignUpFailure(_ error: String) {
-        // TODO: 회원가입 실패 문구 출력
+        // TODO: 회원가입 실패 문구 출력 후 입력값 초기화
     }
     
     func didLoginSuccess() {
-        // TODO: 홈 화면으로 이동
+        // TODO: 로그인 화면으로 이동
+        present(LoginViewController(), animated: true)
     }
     
     func didLoginFailure(_ error: String) {
         // TODO: 로그인 실패 문구 출력 후 회원가입 화면으로 이동
         print("\(error) : 회원가입 화면으로 이동합니다")
-        
+        present(SignUpViewController(), animated: true)
     }
     
     func didLogout() {
-        // TODO: StartView로 이동
+        // TODO: 시작화면으로 이동
+        dismiss(animated: true)
     }
     
     func didDeleteAccountSuccess() {
-        // TODO: 회원정보 삭제 후 StartView로 이동
+        // TODO: 회원정보 삭제 후 시작화면으로 이동
+        dismiss(animated: true)
     }
     
     func didDeleteAccountFailure(_ error: String) {

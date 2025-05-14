@@ -21,7 +21,7 @@ class AuthManager {
     var isUserLoggedIn: Bool { return false }
     
     // MARK: 회원가입
-    func signUp() { }
+    func signUp(email: String) { }
     
     // MARK: 이메일 유효성 확인
     func validateEmail(_ email: String) -> Bool { return true }
