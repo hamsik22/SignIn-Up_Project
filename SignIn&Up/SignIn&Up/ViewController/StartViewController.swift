@@ -18,10 +18,13 @@ class StartViewController: UIViewController {
         view.addSubview(startView)
         startView.delegate = self
         setupUI()
-        print("StartViewController - Delegate: \(String(describing: self))")
-
     }
     
+    
+}
+
+// MARK: - Layout
+extension StartViewController {
     private func setupUI() {
         view.backgroundColor = .systemBackground
         startView.translatesAutoresizingMaskIntoConstraints = false
@@ -29,8 +32,8 @@ class StartViewController: UIViewController {
         NSLayoutConstraint.activate([
             startView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             startView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            startView.widthAnchor.constraint(equalToConstant: 300),
-            startView.heightAnchor.constraint(equalToConstant: 300)
+            startView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            startView.heightAnchor.constraint(equalTo: view.heightAnchor)
         ])
     }
 }

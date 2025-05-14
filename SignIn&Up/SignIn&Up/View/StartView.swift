@@ -16,7 +16,7 @@ class StartView: UIView {
     private var welcomeText: UILabel = {
         let label = UILabel()
         label.text = "Welcome to\nSignIn&Up"
-        label.font = .systemFont(ofSize: 15, weight: .bold)
+        label.font = .systemFont(ofSize: 36, weight: .bold)
         label.numberOfLines = 2
         label.textAlignment = .center
         label.textColor = .purple
@@ -45,6 +45,10 @@ class StartView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+}
+
+// MARK: - SetUp
+extension StartView {
     private func addSubViews() {
         [welcomeText, startButton]
             .forEach { self.addSubview($0) }
@@ -59,7 +63,7 @@ class StartView: UIView {
             welcomeText.heightAnchor.constraint(equalToConstant: 100),
             
             startButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            startButton.topAnchor.constraint(equalTo: welcomeText.bottomAnchor, constant: 20),
+            startButton.topAnchor.constraint(equalTo: welcomeText.bottomAnchor, constant: 100),
             startButton.widthAnchor.constraint(equalToConstant: 100),
             startButton.heightAnchor.constraint(equalToConstant: 50)
         ])
@@ -70,10 +74,10 @@ class StartView: UIView {
     }
 }
 
+// MARK: Method
 extension StartView {
     
     @objc func startButtonTapped() {
-        print("StartButton Tapped")
         if manager.isLoggedIn() {
             delegate?.didLoginSuccess()
         } else {

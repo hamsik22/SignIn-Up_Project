@@ -55,7 +55,7 @@ class LoginView: UIView {
     }
 }
 
-// MARK: Layout
+// MARK: - SetUp
 extension LoginView {
     private func addSubViews() {
         [welcomeLabel, logOutButton, signOutButton]
@@ -99,6 +99,7 @@ extension LoginView {
     }
 }
 
+// MARK: - Method
 extension LoginView {
     
     @objc func logOutTapped() {

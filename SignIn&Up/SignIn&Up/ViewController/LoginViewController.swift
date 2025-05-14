@@ -20,10 +20,10 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        print("LoginViewController - Delegate: \(String(describing: delegate))")
     }
 }
 
+// MARK: - Layout
 extension LoginViewController {
     private func setupUI() {
         view.backgroundColor = .systemBackground

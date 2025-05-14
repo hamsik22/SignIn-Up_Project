@@ -24,6 +24,10 @@ class SignUpViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setConstraints()
     }
+}
+
+// MARK: - Layout
+extension SignUpViewController {
     
     private func setConstraints() {
         signUpView.translatesAutoresizingMaskIntoConstraints = false

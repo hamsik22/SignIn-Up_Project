@@ -19,9 +19,7 @@ class AuthManager {
     }
     
     var isValidationSucceeded: Bool = false {
-        didSet {
-            validationStatusChanged?(isValidationSucceeded)
-        }
+        didSet { validationStatusChanged?(isValidationSucceeded)}
     }
     var validationStatusChanged: ((Bool) -> Void)?
 
@@ -60,22 +58,7 @@ class AuthManager {
         isValidationSucceeded = isValid
         return (isValid, isValid ? "비밀번호가 일치합니다!" : "비밀번호가 일치하지 않습니다.")
     }
-    
-    // MARK: 로그인
-    func login() { }
-    
-    // MARK: 현재 로그인된 사용자 정보 가져오기
-    func getCurrentUser() -> String {
-        let request = NSFetchRequest<NSManagedObject>(entityName: "User")
-        
-        do {
-            let results = try context.fetch(request)
-            return results.first?.value(forKey: "email") as! String
-        } catch {
-            print("이메일 중복 확인 중 오류 발생: \(error.localizedDescription)")
-        }
-        return ""
-    }
+
 }
 
 // MARK: - CoreData Methods
@@ -127,20 +110,6 @@ extension AuthManager {
         }
     }
     
-//    // MARK: 로그아웃
-//    func logOut() {
-//        let request = NSFetchRequest<NSManagedObject>(entityName: "User")
-//        
-//        do {
-//            let user = try context.fetch(request).first!
-//            user.setValue(false, forKey: "isLoggedIn")
-//            try context.save()
-//            print("로그아웃 성공")
-//        } catch {
-//            print("\(error.localizedDescription): 로그아웃 실패")
-//        }
-//    }
-    
     // MARK: 계정 삭제
     func deleteAccount() -> Bool {
         let request = NSFetchRequest<NSManagedObject>(entityName: "User")
@@ -157,5 +126,18 @@ extension AuthManager {
             print("\(error.localizedDescription): 회원탈퇴 실패")
         }
         return false
+    }
+    
+    // MARK: 현재 로그인된 사용자 정보 가져오기
+    func getCurrentUser() -> String {
+        let request = NSFetchRequest<NSManagedObject>(entityName: "User")
+        
+        do {
+            let results = try context.fetch(request)
+            return results.first?.value(forKey: "email") as! String
+        } catch {
+            print("이메일 중복 확인 중 오류 발생: \(error.localizedDescription)")
+        }
+        return ""
     }
 }
