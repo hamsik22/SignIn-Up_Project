@@ -9,8 +9,31 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
+    private var logInView = LoginView()
+    
+    weak var delegate: AuthManagable? {
+        didSet {
+            logInView.delegate = delegate
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .purple
+        setupUI()
+    }
+}
+
+extension LoginViewController {
+    private func setupUI() {
+        view.backgroundColor = .systemBackground
+        logInView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(logInView)
+        
+        NSLayoutConstraint.activate([
+            logInView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logInView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            logInView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            logInView.heightAnchor.constraint(equalTo: view.heightAnchor)
+        ])
     }
 }

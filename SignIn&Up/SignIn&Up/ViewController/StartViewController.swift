@@ -38,6 +38,8 @@ extension StartViewController: AuthManagable {
     func didSignUpSuccess(email: String, password: String) {
         // TODO: 로그인 화면으로 이동
         manager.signUp(email: email, password: password)
+        let vc = LoginViewController()
+        vc.delegate = self
         dismiss(animated: true)
         present(LoginViewController(), animated: true)
     }
