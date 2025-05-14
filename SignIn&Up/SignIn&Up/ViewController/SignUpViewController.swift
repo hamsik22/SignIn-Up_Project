@@ -9,7 +9,14 @@ import UIKit
 
 class SignUpViewController: UIViewController {
     
+    
     private var signUpView = SignUpView()
+    
+    weak var delegate: AuthManagable? {
+        didSet {
+            signUpView.delegate = delegate
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

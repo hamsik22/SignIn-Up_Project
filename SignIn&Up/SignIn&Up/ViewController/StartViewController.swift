@@ -35,6 +35,7 @@ class StartViewController: UIViewController {
 extension StartViewController: AuthManagable {
     func didSignUpSuccess() {
         // TODO: 로그인 화면으로 이동
+        dismiss(animated: true)
         present(LoginViewController(), animated: true)
     }
     
@@ -50,7 +51,9 @@ extension StartViewController: AuthManagable {
     func didLoginFailure(_ error: String) {
         // TODO: 로그인 실패 문구 출력 후 회원가입 화면으로 이동
         print("\(error) : 회원가입 화면으로 이동합니다")
-        present(SignUpViewController(), animated: true)
+        let vc = SignUpViewController()
+        vc.delegate = self
+        present(vc, animated: true)
     }
     
     func didLogout() {
